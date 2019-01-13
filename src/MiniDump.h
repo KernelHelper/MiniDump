@@ -2,12 +2,13 @@
 #define __MINIDUMP_H_
 
 #include <windows.h>
+#include <time.h>
 
 class CMiniDumper
 {
 public:
 
-    CMiniDumper(bool bPromptUserForMiniDump = true);
+    CMiniDumper(bool bPromptUserForMiniDump = false);
     ~CMiniDumper(void);
 
 private:

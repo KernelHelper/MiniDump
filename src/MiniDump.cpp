@@ -14,8 +14,6 @@
     #define tcsplitpath _splitpath
 #endif
 
-#define _USER_DATA_BUFFER_SIZE_ 4096
-
 //-----------------------------------------------------------------------------
 // GLOBALS
 //-----------------------------------------------------------------------------
@@ -35,7 +33,7 @@ typedef BOOL (WINAPI *MINIDUMPWRITEDUMP)(HANDLE hProcess,
 // Name: CMiniDumper()
 // Desc: Constructor
 //-----------------------------------------------------------------------------
-CMiniDumper::CMiniDumper(bool bPromptUserForMiniDump/* = true*/)
+CMiniDumper::CMiniDumper(bool bPromptUserForMiniDump/* = false*/)
 {
 	// Our CMiniDumper should act alone as a singleton.
 	assert(!G_pMiniDumper);
@@ -203,7 +201,7 @@ LONG CMiniDumper::WriteMiniDump(_EXCEPTION_POINTERS *pExceptionInfo)
 
 		if (MiniDumpWriteDump != NULL)
 		{
-			_TCHAR szScratch[_USER_DATA_BUFFER_SIZE_] = { 0 };
+			_TCHAR szScratch[MAX_REASON_COMMENT_LEN] = { 0 };
 
 			SetMiniDumpFileName();
 
@@ -251,8 +249,9 @@ LONG CMiniDumper::WriteMiniDump(_EXCEPTION_POINTERS *pExceptionInfo)
 
 				// Restore the privileges when done
 				if (bPrivilegeEnabled)
+				{
 					RestorePrivilege(hImpersonationToken, &tp);
-
+				}
 				if (bOk)
 				{
 					szResult = NULL;
